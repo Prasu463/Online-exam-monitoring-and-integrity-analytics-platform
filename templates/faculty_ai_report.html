@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>AI Integrity Report - ExamGuard</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+
+            font-family:
+                Arial,
+                Helvetica,
+                sans-serif;
+
+            background: #f4f6f9;
+            color: #222;
+        }
+
+        .header {
+            background: #172033;
+            color: white;
+
+            padding: 20px 40px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+
+        .header span {
+            font-size: 14px;
+            opacity: 0.85;
+        }
+
+        .container {
+            max-width: 1200px;
+
+            margin: 30px auto;
+
+            padding: 0 20px;
+        }
+
+        .back-button {
+            display: inline-block;
+
+            margin-bottom: 20px;
+
+            padding: 10px 16px;
+
+            background: #172033;
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 6px;
+
+            font-size: 14px;
+        }
+
+        .back-button:hover {
+            background: #25324a;
+        }
+
+        .session-card {
+            background: white;
+
+            border-radius: 10px;
+
+            padding: 25px;
+
+            margin-bottom: 25px;
+
+            box-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .session-card h2 {
+            margin-top: 0;
+
+            color: #172033;
+        }
+
+        .details {
+            display: grid;
+
+            grid-template-columns:
+                repeat(auto-fit, minmax(200px, 1fr));
+
+            gap: 15px;
+
+            margin-top: 20px;
+        }
+
+        .detail {
+            background: #f7f8fa;
+
+            padding: 15px;
+
+            border-radius: 7px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+
+            color: #777;
+
+            margin-bottom: 6px;
+        }
+
+        .detail-value {
+            font-size: 17px;
+
+            font-weight: bold;
+
+            color: #222;
+        }
+
+        .risk {
+            padding: 6px 12px;
+
+            border-radius: 20px;
+
+            display: inline-block;
+
+            font-size: 13px;
+        }
+
+        .risk-high {
+            background: #ffe1e1;
+            color: #b00020;
+        }
+
+        .risk-suspicious {
+            background: #fff1cc;
+            color: #8a5a00;
+        }
+
+        .risk-normal {
+            background: #dff5e5;
+            color: #176b2c;
+        }
+
+        .report-card {
+            background: white;
+
+            border-radius: 10px;
+
+            padding: 25px;
+
+            box-shadow:
+                0 2px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .report-card h2 {
+            margin-top: 0;
+
+            color: #172033;
+
+            border-bottom: 1px solid #ddd;
+
+            padding-bottom: 15px;
+        }
+
+        .report {
+            background: #fafafa;
+
+            border: 1px solid #ddd;
+
+            border-radius: 8px;
+
+            padding: 25px;
+
+            white-space: pre-wrap;
+
+            font-family:
+                "Courier New",
+                monospace;
+
+            font-size: 14px;
+
+            line-height: 1.7;
+
+            overflow-x: auto;
+        }
+
+        .actions {
+            margin-top: 20px;
+
+            display: flex;
+
+            gap: 10px;
+
+            flex-wrap: wrap;
+        }
+
+        .button {
+            padding: 10px 16px;
+
+            border-radius: 6px;
+
+            text-decoration: none;
+
+            border: none;
+
+            cursor: pointer;
+
+            font-size: 14px;
+        }
+
+        .primary {
+            background: #172033;
+            color: white;
+        }
+
+        .secondary {
+            background: #e9edf3;
+            color: #172033;
+        }
+
+        @media print {
+
+            .header {
+                background: white;
+                color: black;
+
+                border-bottom: 1px solid #ddd;
+            }
+
+            .back-button,
+            .actions {
+                display: none;
+            }
+
+            body {
+                background: white;
+            }
+
+            .session-card,
+            .report-card {
+                box-shadow: none;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <div class="header">
+
+        <h1>
+            ExamGuard AI Integrity Report
+        </h1>
+
+        <span>
+            Faculty / Proctor
+        </span>
+
+    </div>
+
+
+    <!-- =====================================================
+         MAIN CONTAINER
+         ===================================================== -->
+
+    <div class="container">
+
+        <a
+            href="{{ url_for(
+                'faculty_session_details',
+                session_id=result['id']
+            ) }}"
+            class="back-button"
+        >
+            ← Back to Session Details
+        </a>
+
+
+        <!-- =================================================
+             SESSION INFORMATION
+             ================================================= -->
+
+        <div class="session-card">
+
+            <h2>
+                Session Information
+            </h2>
+
+            <div class="details">
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Candidate
+                    </div>
+
+                    <div class="detail-value">
+                        {{ result['candidate_name'] }}
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Candidate Email
+                    </div>
+
+                    <div class="detail-value">
+                        {{ result['candidate_email'] }}
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Session ID
+                    </div>
+
+                    <div class="detail-value">
+                        {{ session_id }}
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Integrity Score
+                    </div>
+
+                    <div class="detail-value">
+                        {{ result['percentage'] }}
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Risk Level
+                    </div>
+
+                    <div class="detail-value">
+
+                        {% if risk_level == "HIGH RISK" %}
+
+                            <span class="risk risk-high">
+                                {{ risk_level }}
+                            </span>
+
+                        {% elif risk_level == "SUSPICIOUS" %}
+
+                            <span class="risk risk-suspicious">
+                                {{ risk_level }}
+                            </span>
+
+                        {% else %}
+
+                            <span class="risk risk-normal">
+                                {{ risk_level }}
+                            </span>
+
+                        {% endif %}
+
+                    </div>
+
+                </div>
+
+
+                <div class="detail">
+
+                    <div class="detail-label">
+                        Risk Points
+                    </div>
+
+                    <div class="detail-value">
+                        {{ risk_points }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =================================================
+             AI REPORT
+             ================================================= -->
+
+        <div class="report-card">
+
+            <h2>
+                AI Integrity Analysis
+            </h2>
+
+            <div class="report">{{ ai_report }}</div>
+
+
+            <div class="actions">
+
+                <button
+                    onclick="window.print()"
+                    class="button primary"
+                >
+                    Print Report
+                </button>
+
+                <a
+                    href="{{ url_for(
+                        'faculty_session_details',
+                        session_id=result['id']
+                    ) }}"
+                    class="button secondary"
+                >
+                    Session Details
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</body>
+
+</html>

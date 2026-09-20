@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Start Exam | ExamGuard</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+
+body{
+    background:linear-gradient(135deg,#0d6efd,#6610f2);
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+.container-box{
+    width:900px;
+    margin:50px auto;
+    background:white;
+    border-radius:20px;
+    padding:40px;
+    box-shadow:0px 10px 25px rgba(0,0,0,0.2);
+}
+
+.profile{
+    text-align:center;
+}
+
+.profile img{
+    width:160px;
+    height:160px;
+    border-radius:50%;
+    border:5px solid #0d6efd;
+}
+
+.profile h2{
+    margin-top:15px;
+    color:#0d6efd;
+    font-weight:bold;
+}
+
+.info{
+    margin-top:30px;
+}
+
+.info table{
+    width:100%;
+}
+
+.info td,
+.info th{
+    padding:12px;
+    font-size:18px;
+}
+
+.instructions{
+    margin-top:40px;
+    background:#f8f9fa;
+    padding:25px;
+    border-radius:15px;
+}
+
+.instructions h4{
+    color:#dc3545;
+}
+
+.instructions ul{
+    margin-top:15px;
+}
+
+.instructions li{
+    margin-bottom:12px;
+}
+
+.start-btn{
+    width:100%;
+    padding:15px;
+    margin-top:30px;
+    font-size:20px;
+    border:none;
+    border-radius:10px;
+    background:#198754;
+    color:white;
+    font-weight:bold;
+}
+
+.start-btn:hover{
+    background:#157347;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container-box">
+
+<div class="profile">
+
+<img src="{{ url_for('static', filename='uploads/candidate.jpg') }}">
+
+<h2>{{ user[0] }}</h2>
+
+<p class="text-success fw-bold">Ready for Examination</p>
+
+</div>
+
+<div class="info">
+
+<table class="table table-bordered">
+
+<tr>
+<th>Candidate Name</th>
+<td>{{ user[0] }}</td>
+</tr>
+
+<tr>
+<th>Email</th>
+<td>{{ user[1] }}</td>
+</tr>
+
+<tr>
+<th>Status</th>
+<td class="text-success"><b>Eligible for Exam</b></td>
+</tr>
+
+</table>
+
+</div>
+
+<div class="instructions">
+
+<h4>📋 Examination Instructions</h4>
+
+<ul>
+
+<li>Exam Duration: <b>10 Minutes</b></li>
+
+<li>Total Questions: <b>5</b></li>
+
+<li>Each question carries <b>1 Mark</b>.</li>
+
+<li>No negative marking.</li>
+
+<li>Do not refresh the browser during the exam.</li>
+
+<li>Do not switch tabs or minimize the browser.</li>
+
+<li>Ensure a stable internet connection.</li>
+
+<li>Keep your webcam ready for AI Monitoring (Milestone 2).</li>
+
+<li>The exam will be submitted automatically when the timer ends.</li>
+
+</ul>
+
+</div>
+
+<form action="/exam">
+
+<button class="start-btn">
+🚀 Begin Exam
+</button>
+
+</form>
+
+</div>
+
+</body>
+
+</html>

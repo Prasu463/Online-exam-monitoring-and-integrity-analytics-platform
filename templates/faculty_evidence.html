@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>ExamGuard - Evidence</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        .header {
+            background: #1769e0;
+            color: white;
+            padding: 25px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .header p {
+            margin-top: 8px;
+            opacity: 0.9;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 30px auto;
+        }
+
+        .back {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 18px;
+            background: #374151;
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 14px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+
+        .candidate {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(220px, 1fr));
+
+            gap: 20px;
+        }
+
+        .info-box {
+            border: 1px solid #dbe3ef;
+            border-radius: 10px;
+            padding: 18px;
+        }
+
+        .label {
+            color: #6b7280;
+            font-size: 14px;
+            margin-bottom: 7px;
+        }
+
+        .value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .title {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .evidence-grid {
+            display: grid;
+            grid-template-columns:
+                repeat(auto-fit, minmax(300px, 1fr));
+
+            gap: 25px;
+        }
+
+        .evidence-card {
+            background: white;
+            border-radius: 14px;
+            overflow: hidden;
+            border: 1px solid #e1e7ef;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        .evidence-card img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .evidence-content {
+            padding: 18px;
+        }
+
+        .violation {
+            color: #dc2626;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .time {
+            color: #6b7280;
+            margin-top: 8px;
+        }
+
+        .warning {
+            margin-top: 10px;
+            display: inline-block;
+            background: #fff3cd;
+            color: #92400e;
+            padding: 6px 10px;
+            border-radius: 6px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 50px 20px;
+            color: #6b7280;
+        }
+
+        .empty-icon {
+            font-size: 55px;
+            margin-bottom: 15px;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <div class="header">
+
+        <h1>🛡️ ExamGuard</h1>
+
+        <p>
+            Faculty Evidence Gallery
+        </p>
+
+    </div>
+
+
+    <div class="container">
+
+        <a
+            href="{{ url_for('faculty_dashboard') }}"
+            class="back"
+        >
+            ← Back to Faculty Dashboard
+        </a>
+
+
+        <div class="card">
+
+            <h2 class="title">
+                👤 Candidate Information
+            </h2>
+
+            <div class="candidate">
+
+                <div class="info-box">
+
+                    <div class="label">
+                        Candidate
+                    </div>
+
+                    <div class="value">
+                        {{ result.candidate_name }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <div class="label">
+                        Email
+                    </div>
+
+                    <div class="value">
+                        {{ result.candidate_email }}
+                    </div>
+
+                </div>
+
+
+                <div class="info-box">
+
+                    <div class="label">
+                        Session
+                    </div>
+
+                    <div class="value">
+                        {{ session_id }}
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <div class="card">
+
+            <h2 class="title">
+                📸 Proctoring Evidence
+            </h2>
+
+
+            {% if evidence %}
+
+                <div class="evidence-grid">
+
+                    {% for item in evidence %}
+
+                        <div class="evidence-card">
+
+                            {% if item.image_url %}
+
+                                <img
+                                    src="{{ item.image_url }}"
+                                    alt="Proctoring Evidence"
+                                >
+
+                            {% endif %}
+
+
+                            <div class="evidence-content">
+
+                                <div class="violation">
+
+                                    ⚠️
+                                    {{ item.violation_type }}
+
+                                </div>
+
+
+                                {% if item.warning_number %}
+
+                                    <div class="warning">
+
+                                        Warning
+                                        {{ item.warning_number }}
+
+                                    </div>
+
+                                {% endif %}
+
+
+                                {% if item.event_time %}
+
+                                    <div class="time">
+
+                                        🕐
+                                        {{ item.event_time }}
+
+                                    </div>
+
+                                {% endif %}
+
+                            </div>
+
+                        </div>
+
+                    {% endfor %}
+
+                </div>
+
+            {% else %}
+
+                <div class="empty">
+
+                    <div class="empty-icon">
+                        📷
+                    </div>
+
+                    <h3>
+                        No Evidence Available
+                    </h3>
+
+                    <p>
+                        No screenshots have been recorded
+                        for this examination session.
+                    </p>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+</body>
+</html>

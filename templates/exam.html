@@ -1,0 +1,2681 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <!-- =========================================================
+         BASIC HTML SETTINGS
+         ========================================================= -->
+
+    <!-- HTML5 character encoding -->
+    <meta charset="UTF-8">
+
+    <!-- Makes the page responsive -->
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ExamGuard - Online Examination</title>
+
+
+    <!-- =========================================================
+         MEDIAPIPE
+         ========================================================= -->
+
+    <!--
+        MediaPipe Face Mesh library.
+
+        Used for:
+        - Face detection
+        - Face landmark detection
+        - Looking Left
+        - Looking Right
+        - Looking Up
+        - Looking Down
+    -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
+
+
+    <!-- =========================================================
+         CSS
+         ========================================================= -->
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+        }
+
+
+        /* =====================================================
+           HEADER
+           ===================================================== */
+
+        .header {
+            background: #111827;
+            color: white;
+            padding: 15px 25px;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            position: sticky;
+            top: 0;
+
+            z-index: 1000;
+        }
+
+
+        .header h2 {
+            margin: 0;
+        }
+
+
+        .header-right {
+            display: flex;
+            gap: 25px;
+            align-items: center;
+        }
+
+
+        /* =====================================================
+           TIMER
+           ===================================================== */
+
+        #timer {
+            font-size: 22px;
+            font-weight: bold;
+
+            background: #2563eb;
+
+            padding: 10px 18px;
+
+            border-radius: 8px;
+        }
+
+
+        /* Timer becomes red during last minute */
+        #timer.warning {
+            background: #dc2626;
+        }
+
+
+        /* =====================================================
+           MAIN LAYOUT
+           ===================================================== */
+
+        .main-container {
+            max-width: 1200px;
+            margin: auto;
+            padding: 20px;
+
+            display: grid;
+
+            grid-template-columns:
+                300px 1fr;
+
+            gap: 20px;
+        }
+
+
+        /* =====================================================
+           CAMERA CARD
+           ===================================================== */
+
+        .camera-card {
+            background: white;
+
+            padding: 15px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 3px 12px
+                rgba(0, 0, 0, 0.10);
+
+            height: fit-content;
+
+            position: sticky;
+            top: 85px;
+        }
+
+
+        .camera-card h3 {
+            margin-top: 0;
+            text-align: center;
+        }
+
+
+        /* Webcam video */
+        #video {
+            width: 100%;
+
+            border-radius: 10px;
+
+            background: black;
+
+            /*
+                Mirror the webcam so it behaves
+                like a normal selfie camera.
+            */
+            transform: scaleX(-1);
+        }
+
+
+        #cameraStatus {
+            text-align: center;
+
+            margin-top: 10px;
+
+            font-weight: bold;
+
+            color: green;
+        }
+
+
+        /* =====================================================
+           FACE STATUS
+           ===================================================== */
+
+        #faceStatus {
+            margin-top: 10px;
+
+            padding: 10px;
+
+            border-radius: 8px;
+
+            text-align: center;
+
+            font-weight: bold;
+
+            background: #ecfdf5;
+
+            color: #166534;
+        }
+
+
+        #faceStatus.warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+
+        #faceStatus.danger {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+
+        /* =====================================================
+           WARNING BOX
+           ===================================================== */
+
+        .warning-box {
+            background: #fff3cd;
+
+            color: #664d03;
+
+            border: 1px solid #ffecb5;
+
+            padding: 15px;
+
+            margin-bottom: 20px;
+
+            border-radius: 8px;
+        }
+
+
+        /* =====================================================
+           TERMINATION BOX
+           ===================================================== */
+
+        #terminatedBox {
+            display: none;
+
+            background: #f8d7da;
+
+            color: #842029;
+
+            border: 1px solid #f5c2c7;
+
+            padding: 20px;
+
+            margin-bottom: 20px;
+
+            border-radius: 10px;
+
+            text-align: center;
+
+            font-size: 20px;
+
+            font-weight: bold;
+        }
+
+
+        /* =====================================================
+           QUESTION
+           ===================================================== */
+
+        /*
+            All questions are hidden initially.
+        */
+
+        .question {
+            display: none;
+
+            background: white;
+
+            padding: 25px;
+
+            margin-bottom: 20px;
+
+            border-radius: 12px;
+
+            box-shadow:
+                0 3px 12px
+                rgba(0, 0, 0, 0.08);
+        }
+
+
+        /*
+            JavaScript adds "active" to
+            the current question.
+        */
+
+        .question.active {
+            display: block;
+        }
+
+
+        .question h3 {
+            margin-top: 0;
+
+            color: #1f2937;
+        }
+
+
+        .question-text {
+            font-size: 18px;
+
+            margin-bottom: 20px;
+        }
+
+
+        /* =====================================================
+           OPTIONS
+           ===================================================== */
+
+        .option {
+            display: block;
+
+            padding: 13px;
+
+            margin: 10px 0;
+
+            border: 1px solid #ddd;
+
+            border-radius: 8px;
+
+            cursor: pointer;
+        }
+
+
+        .option:hover {
+            background: #f3f4f6;
+        }
+
+
+        .option input {
+            margin-right: 10px;
+        }
+
+
+        /* =====================================================
+           QUESTION NAVIGATION
+           ===================================================== */
+
+        .question-navigation {
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 15px;
+
+            margin: 20px 0;
+
+            padding: 10px 0;
+        }
+
+
+        .question-navigation button {
+            border: none;
+
+            padding: 11px 22px;
+
+            border-radius: 8px;
+
+            font-size: 16px;
+
+            cursor: pointer;
+        }
+
+
+        #previousBtn {
+            background: #6b7280;
+            color: white;
+        }
+
+
+        #previousBtn:disabled {
+            opacity: 0.5;
+
+            cursor: not-allowed;
+        }
+
+
+        #nextBtn {
+            background: #2563eb;
+            color: white;
+        }
+
+
+        /* =====================================================
+           SUBMIT
+           ===================================================== */
+
+        .submit-container {
+            text-align: center;
+
+            padding: 20px;
+        }
+
+
+        .submit-btn {
+            background: #16a34a;
+
+            color: white;
+
+            border: none;
+
+            padding: 15px 45px;
+
+            border-radius: 8px;
+
+            font-size: 18px;
+
+            cursor: pointer;
+        }
+
+
+        .submit-btn:disabled {
+            background: #9ca3af;
+
+            cursor: not-allowed;
+        }
+
+
+        /* =====================================================
+           RESPONSIVE DESIGN
+           ===================================================== */
+
+        @media (max-width: 800px) {
+
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+
+
+            .camera-card {
+                position: relative;
+                top: 0;
+            }
+
+
+            .header {
+                flex-direction: column;
+
+                gap: 10px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+     ========================================================= -->
+
+<div class="header">
+
+    <h2>
+        🛡️ ExamGuard
+    </h2>
+
+
+    <div class="header-right">
+
+        <!-- Warning counter -->
+
+        <div>
+
+            ⚠️ Warnings:
+
+            <span id="warningCount">
+                0
+            </span>
+
+            / 3
+
+        </div>
+
+
+        <!-- Exam timer -->
+
+        <div id="timer">
+
+            ⏱️ 10:00
+
+        </div>
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     MAIN CONTAINER
+     ========================================================= -->
+
+<div class="main-container">
+
+
+    <!-- =====================================================
+         LEFT SIDE - CAMERA
+         ===================================================== -->
+
+    <div class="camera-card">
+
+        <h3>
+            📷 Live Proctoring
+        </h3>
+
+
+        <!--
+            HTML video element.
+
+            WebRTC getUserMedia() sends the
+            webcam stream to this element.
+        -->
+
+        <video
+            id="video"
+            autoplay
+            playsinline>
+        </video>
+
+
+        <!-- Camera status -->
+
+        <div id="cameraStatus">
+
+            Starting camera...
+
+        </div>
+
+
+        <!--
+            AI face detection status.
+
+            JavaScript changes this to:
+
+            Looking Straight
+            Looking Left
+            Looking Right
+            Looking Up
+            Looking Down
+            No Face
+            Multiple Faces
+        -->
+
+        <div id="faceStatus">
+
+            AI Starting...
+
+        </div>
+
+
+        <p style="font-size:13px;text-align:center;">
+
+            Your webcam is active during
+            the examination.
+
+        </p>
+
+    </div>
+
+
+
+    <!-- =====================================================
+         RIGHT SIDE - EXAM
+         ===================================================== -->
+
+    <div>
+
+
+        <!-- =================================================
+             PROCTORING RULES
+             ================================================= -->
+
+        <div class="warning-box">
+
+            ⚠️
+
+            <strong>
+                Exam Monitoring Active
+            </strong>
+
+            <br><br>
+
+            Keep your face visible.
+
+            <br>
+
+            Do not switch browser tabs.
+
+            <br>
+
+            Do not leave the examination.
+
+            <br>
+
+            Keep only one person in front
+            of the camera.
+
+        </div>
+
+
+
+        <!-- =================================================
+             TERMINATION MESSAGE
+             ================================================= -->
+
+        <div id="terminatedBox">
+
+            🛑 EXAM TERMINATED
+
+            <br><br>
+
+            Maximum warning limit exceeded.
+
+        </div>
+
+
+
+        <!-- =================================================
+             EXAM FORM
+             ================================================= -->
+
+        <form
+            id="examForm"
+            method="POST"
+            action="{{ url_for('submit_exam') }}"
+        >
+
+
+            <!-- =================================================
+                 QUESTIONS
+                 ================================================= -->
+
+            {% if questions %}
+
+
+                {% for question in questions %}
+
+
+                <!--
+                    Every question is initially hidden.
+
+                    JavaScript displays only the
+                    current question.
+                -->
+
+                <div
+                    class="question"
+                    data-question-index="{{ loop.index0 }}"
+                >
+
+
+                    <h3>
+
+                        Question {{ loop.index }}
+
+                    </h3>
+
+
+                    <!-- Question text -->
+
+                    <div class="question-text">
+
+                        {{ question[1] }}
+
+                    </div>
+
+
+
+                    <!-- =================================================
+                         OPTION A
+                         ================================================= -->
+
+                    <label class="option">
+
+                        <input
+                            type="radio"
+                            name="q{{ question[0] }}"
+                            value="A"
+                        >
+
+                        <strong>A.</strong>
+
+                        {{ question[2] }}
+
+                    </label>
+
+
+
+                    <!-- =================================================
+                         OPTION B
+                         ================================================= -->
+
+                    <label class="option">
+
+                        <input
+                            type="radio"
+                            name="q{{ question[0] }}"
+                            value="B"
+                        >
+
+                        <strong>B.</strong>
+
+                        {{ question[3] }}
+
+                    </label>
+
+
+
+                    <!-- =================================================
+                         OPTION C
+                         ================================================= -->
+
+                    <label class="option">
+
+                        <input
+                            type="radio"
+                            name="q{{ question[0] }}"
+                            value="C"
+                        >
+
+                        <strong>C.</strong>
+
+                        {{ question[4] }}
+
+                    </label>
+
+
+
+                    <!-- =================================================
+                         OPTION D
+                         ================================================= -->
+
+                    <label class="option">
+
+                        <input
+                            type="radio"
+                            name="q{{ question[0] }}"
+                            value="D"
+                        >
+
+                        <strong>D.</strong>
+
+                        {{ question[5] }}
+
+                    </label>
+
+
+                </div>
+
+
+                {% endfor %}
+
+
+                <!-- =================================================
+                     QUESTION NAVIGATION
+                     ================================================= -->
+
+                <div class="question-navigation">
+
+
+                    <!-- Previous -->
+
+                    <button
+                        type="button"
+                        id="previousBtn"
+                        disabled
+                    >
+
+                        ← Previous
+
+                    </button>
+
+
+                    <!-- Current question number -->
+
+                    <span id="questionNumber">
+
+                        Question 1 of
+                        {{ questions|length }}
+
+                    </span>
+
+
+                    <!-- Next -->
+
+                    <button
+                        type="button"
+                        id="nextBtn"
+                    >
+
+                        Next →
+
+                    </button>
+
+
+                </div>
+
+
+            {% else %}
+
+
+                <div class="question"
+                     style="display:block;">
+
+                    <h3>
+                        No questions available.
+                    </h3>
+
+                </div>
+
+
+            {% endif %}
+
+
+
+            <!-- =================================================
+                 SUBMIT BUTTON
+                 ================================================= -->
+
+            <div class="submit-container">
+
+                <!--
+                    Hidden initially.
+
+                    It appears only on the
+                    last question.
+                -->
+
+                <button
+                    type="submit"
+                    id="submitBtn"
+                    class="submit-btn"
+                    style="display:none;"
+                >
+
+                    Submit Examination
+
+                </button>
+
+            </div>
+
+
+        </form>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =========================================================
+     JAVASCRIPT
+     ========================================================= -->
+
+<script>
+
+
+/* ============================================================
+   GLOBAL VARIABLES
+   ============================================================ */
+
+
+/*
+    Indicates whether the exam has been terminated.
+*/
+
+let examTerminated = false;
+
+
+/*
+    Prevents multiple form submissions.
+*/
+
+let submitting = false;
+
+
+/*
+    10 minutes = 600 seconds.
+*/
+
+let timeLeft = 10 * 60;
+
+
+/*
+    Stores the webcam stream.
+*/
+
+let webcamStream = null;
+
+
+/*
+    Prevents face detection from being
+    started multiple times.
+*/
+
+let detectionRunning = false;
+
+
+/*
+    Used to prevent excessive browser-event logging.
+*/
+
+let lastMouseLog = 0;
+
+let lastKeyboardLog = 0;
+
+
+/*
+    Prevent repeated warnings too quickly.
+*/
+
+let lastWarningTime = 0;
+
+let lastNoFaceTime = 0;
+
+
+/*
+    Warning cooldown.
+*/
+
+const WARNING_COOLDOWN = 3000;
+
+
+
+/* ============================================================
+   HTML ELEMENTS
+   ============================================================ */
+
+const video =
+    document.getElementById("video");
+
+
+const cameraStatus =
+    document.getElementById("cameraStatus");
+
+
+const faceStatus =
+    document.getElementById("faceStatus");
+
+
+const warningCount =
+    document.getElementById("warningCount");
+
+
+const terminatedBox =
+    document.getElementById("terminatedBox");
+
+
+const submitBtn =
+    document.getElementById("submitBtn");
+
+
+
+/* ============================================================
+   LOG BROWSER EVENT
+   ============================================================ */
+
+/*
+    Sends browser events to Flask.
+
+    Examples:
+
+    TAB_SWITCH
+    WINDOW_BLUR
+    WINDOW_FOCUS
+    MOUSE_ACTIVITY
+    KEYBOARD_ACTIVITY
+*/
+
+function logBrowserEvent(
+    eventType,
+    eventValue
+) {
+
+    fetch(
+        "{{ url_for('log_event') }}",
+        {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type":
+                    "application/json"
+
+            },
+
+            body: JSON.stringify({
+
+                event_type:
+                    eventType,
+
+                event_value:
+                    eventValue
+
+            })
+
+        }
+    )
+
+    .then(
+        response =>
+            response.json()
+    )
+
+    .then(
+        data => {
+
+            console.log(
+                "Event logged:",
+                eventType
+            );
+
+        }
+    )
+
+    .catch(
+        error => {
+
+            console.log(
+                "Event logging error:",
+                error
+            );
+
+        }
+    );
+
+}
+
+
+
+/* ============================================================
+   WEBCAM
+   ============================================================ */
+
+/*
+    WebRTC getUserMedia()
+
+    This asks the browser for webcam access.
+
+    video: true
+        Webcam is required.
+
+    audio: false
+        Microphone is not required.
+*/
+
+async function startCamera() {
+
+    try {
+
+
+        webcamStream =
+            await navigator.mediaDevices.getUserMedia({
+
+                video: {
+
+                    width: 640,
+
+                    height: 480,
+
+                    facingMode: "user"
+
+                },
+
+                audio: false
+
+            });
+
+
+        /*
+            Send webcam stream to video element.
+        */
+
+        video.srcObject =
+            webcamStream;
+
+
+        cameraStatus.textContent =
+            "🟢 Camera Active";
+
+
+        cameraStatus.style.color =
+            "green";
+
+
+        /*
+            Start MediaPipe after camera starts.
+        */
+
+        startFaceDetection();
+
+
+    }
+
+    catch (error) {
+
+
+        console.error(
+            "Camera error:",
+            error
+        );
+
+
+        cameraStatus.textContent =
+            "🔴 Camera Not Available";
+
+
+        cameraStatus.style.color =
+            "red";
+
+
+        logBrowserEvent(
+            "CAMERA_ERROR",
+            error.message
+        );
+
+    }
+
+}
+
+
+/*
+    Start webcam.
+*/
+
+startCamera();
+
+
+
+/* ============================================================
+   TIMER
+   ============================================================ */
+
+const timerElement =
+    document.getElementById("timer");
+
+
+function updateTimer() {
+
+    /*
+        Don't continue timer if exam
+        has already been terminated.
+    */
+
+    if (examTerminated) {
+
+        return;
+
+    }
+
+
+    const minutes =
+        Math.floor(
+            timeLeft / 60
+        );
+
+
+    const seconds =
+        timeLeft % 60;
+
+
+    /*
+        Display timer.
+
+        Example:
+
+        09:59
+        09:58
+        ...
+    */
+
+    timerElement.textContent =
+        "⏱️ " +
+        String(minutes).padStart(
+            2,
+            "0"
+        ) +
+        ":" +
+        String(seconds).padStart(
+            2,
+            "0"
+        );
+
+
+    /*
+        Last 60 seconds:
+        change timer appearance.
+    */
+
+    if (timeLeft <= 60) {
+
+        timerElement.classList.add(
+            "warning"
+        );
+
+    }
+
+
+    /*
+        Time finished.
+    */
+
+    if (timeLeft <= 0) {
+
+        timeLeft = 0;
+
+
+        alert(
+            "Time is over. Your examination will be submitted."
+        );
+
+
+        /*
+            Stop webcam.
+        */
+
+        if (webcamStream) {
+
+            webcamStream
+                .getTracks()
+                .forEach(
+                    track =>
+                        track.stop()
+                );
+
+        }
+
+
+        /*
+            Submit examination.
+        */
+
+        document
+            .getElementById("examForm")
+            .submit();
+
+
+        return;
+
+    }
+
+
+    timeLeft--;
+
+}
+
+
+/*
+    Start timer immediately.
+*/
+
+updateTimer();
+
+
+/*
+    Update timer every second.
+*/
+
+setInterval(
+    updateTimer,
+    1000
+);
+
+
+
+/* ============================================================
+   MEDIAPIPE FACE MESH
+   ============================================================ */
+
+/*
+    MediaPipe Face Mesh is used to
+    detect facial landmarks.
+
+    These landmarks are used to estimate
+    the candidate's looking direction.
+*/
+
+const faceMesh =
+    new FaceMesh({
+
+        /*
+            MediaPipe loads its library files
+            from this CDN.
+        */
+
+        locateFile:
+            function(file) {
+
+                return (
+                    "https://cdn.jsdelivr.net/npm/" +
+                    "@mediapipe/face_mesh/" +
+                    file
+                );
+
+            }
+
+    });
+
+
+/*
+    MediaPipe configuration.
+*/
+
+faceMesh.setOptions({
+
+    /*
+        Detect up to 2 faces.
+
+        This allows us to detect
+        multiple persons.
+    */
+
+    maxNumFaces: 2,
+
+
+    /*
+        More detailed face landmarks.
+    */
+
+    refineLandmarks: true,
+
+
+    /*
+        Face detection confidence.
+    */
+
+    minDetectionConfidence: 0.5,
+
+
+    /*
+        Face tracking confidence.
+    */
+
+    minTrackingConfidence: 0.5
+
+});
+
+
+
+/* ============================================================
+   MEDIAPIPE RESULTS
+   ============================================================ */
+
+faceMesh.onResults(
+    function(results) {
+
+
+        /* ====================================================
+           NO FACE
+           ==================================================== */
+
+        /*
+            If no face is detected,
+            multiFaceLandmarks is empty.
+        */
+
+        if (
+            !results.multiFaceLandmarks ||
+            results.multiFaceLandmarks.length === 0
+        ) {
+
+
+            faceStatus.textContent =
+                "⚠️ No Face Detected";
+
+
+            faceStatus.className =
+                "warning";
+
+
+            const now =
+                Date.now();
+
+
+            /*
+                Don't send No Face warning
+                continuously.
+            */
+
+            if (
+                now - lastNoFaceTime >
+                5000
+            ) {
+
+                lastNoFaceTime =
+                    now;
+
+
+                sendAIWarning(
+                    "WARNING : No Face"
+                );
+
+            }
+
+
+            return;
+
+        }
+
+
+
+        /* ====================================================
+           MULTIPLE PERSONS
+           ==================================================== */
+
+        /*
+            More than one face means
+            multiple persons are present.
+        */
+
+        if (
+            results.multiFaceLandmarks.length > 1
+        ) {
+
+
+            faceStatus.textContent =
+                "⚠️ Multiple Faces";
+
+
+            faceStatus.className =
+                "danger";
+
+
+            sendAIWarning(
+                "WARNING : Multiple Persons Detected"
+            );
+
+
+            return;
+
+        }
+
+
+
+        /* ====================================================
+           ONE FACE
+           ==================================================== */
+
+        /*
+            Get the first detected face.
+        */
+
+        const landmarks =
+            results.multiFaceLandmarks[0];
+
+
+        /*
+            MediaPipe landmark points.
+
+            Nose
+            Eyes
+            Forehead
+            Chin
+        */
+
+        const nose =
+            landmarks[1];
+
+
+        const leftEye =
+            landmarks[33];
+
+
+        const rightEye =
+            landmarks[263];
+
+
+        const forehead =
+            landmarks[10];
+
+
+        const chin =
+            landmarks[152];
+
+
+
+        /* ====================================================
+           EYE CENTER
+           ==================================================== */
+
+        /*
+            Calculate center point between
+            the two eyes.
+        */
+
+        const eyeCenterX =
+            (
+                leftEye.x +
+                rightEye.x
+            ) / 2;
+
+
+
+        /* ====================================================
+           FACE WIDTH
+           ==================================================== */
+
+        const faceWidth =
+            Math.abs(
+                rightEye.x -
+                leftEye.x
+            );
+
+
+        /*
+            Prevent division by zero.
+        */
+
+        if (
+            faceWidth < 0.01
+        ) {
+
+            return;
+
+        }
+
+
+
+        /* ====================================================
+           HORIZONTAL DIRECTION
+           ==================================================== */
+
+        /*
+            Compare nose position
+            with eye-center position.
+
+            Used to estimate:
+
+            Looking Left
+            Looking Right
+        */
+
+        const horizontalOffset =
+            (
+                nose.x -
+                eyeCenterX
+            ) / faceWidth;
+
+
+
+        /* ====================================================
+           FACE HEIGHT
+           ==================================================== */
+
+        const faceHeight =
+            Math.abs(
+                chin.y -
+                forehead.y
+            );
+
+
+        if (
+            faceHeight < 0.01
+        ) {
+
+            return;
+
+        }
+
+
+
+        /* ====================================================
+           VERTICAL DIRECTION
+           ==================================================== */
+
+        /*
+            Used to estimate:
+
+            Looking Up
+            Looking Down
+        */
+
+        const verticalOffset =
+            (
+                nose.y -
+                forehead.y
+            ) / faceHeight;
+
+
+
+        /* ====================================================
+           DETERMINE DIRECTION
+           ==================================================== */
+
+        let direction =
+            "Looking Straight";
+
+
+        /*
+            Looking Left
+        */
+
+        if (
+            horizontalOffset < -0.35
+        ) {
+
+            direction =
+                "WARNING : Looking Left";
+
+        }
+
+
+        /*
+            Looking Right
+        */
+
+        else if (
+            horizontalOffset > 0.35
+        ) {
+
+            direction =
+                "WARNING : Looking Right";
+
+        }
+
+
+        /*
+            Looking Up
+        */
+
+        else if (
+            verticalOffset < 0.38
+        ) {
+
+            direction =
+                "WARNING : Looking Up";
+
+        }
+
+
+        /*
+            Looking Down
+        */
+
+        else if (
+            verticalOffset > 0.68
+        ) {
+
+            direction =
+                "WARNING : Looking Down";
+
+        }
+
+
+
+        /* ====================================================
+           LOOKING STRAIGHT
+           ==================================================== */
+
+        if (
+            direction ===
+            "Looking Straight"
+        ) {
+
+            faceStatus.textContent =
+                "🟢 Looking Straight";
+
+
+            faceStatus.className =
+                "";
+
+
+            return;
+
+        }
+
+
+
+        /* ====================================================
+           SEND LOOKING-AWAY WARNING
+           ==================================================== */
+
+        faceStatus.textContent =
+            direction;
+
+
+        faceStatus.className =
+            "warning";
+
+
+        sendAIWarning(
+            direction
+        );
+
+    }
+);
+
+
+
+/* ============================================================
+   SEND AI WARNING TO FLASK
+   ============================================================ */
+
+function sendAIWarning(message) {
+
+
+    /*
+        Don't send warnings after termination.
+    */
+
+    if (examTerminated) {
+
+        return;
+
+    }
+
+
+    const now =
+        Date.now();
+
+
+    /*
+        Warning cooldown.
+    */
+
+    if (
+        now - lastWarningTime <
+        WARNING_COOLDOWN
+    ) {
+
+        return;
+
+    }
+
+
+    lastWarningTime =
+        now;
+
+
+    faceStatus.textContent =
+        message;
+
+
+    faceStatus.className =
+        "warning";
+
+
+    /*
+        Send warning to Flask backend.
+    */
+
+    fetch(
+        "{{ url_for('update_warning') }}",
+        {
+
+            method: "POST",
+
+            headers: {
+
+                "Content-Type":
+                    "application/json"
+
+            },
+
+            body: JSON.stringify({
+
+                message: message
+
+            })
+
+        }
+    )
+
+    .then(
+        response =>
+            response.json()
+    )
+
+    .then(
+        data => {
+
+
+            /*
+                Update warning counter.
+            */
+
+            warningCount.textContent =
+                data.warnings;
+
+
+            /*
+                If maximum warnings reached,
+                terminate exam.
+            */
+
+            if (
+                data.terminated
+            ) {
+
+                examTerminated =
+                    true;
+
+
+                terminatedBox.style.display =
+                    "block";
+
+
+                submitBtn.disabled =
+                    true;
+
+
+                faceStatus.textContent =
+                    "🛑 EXAM TERMINATED";
+
+
+                faceStatus.className =
+                    "danger";
+
+
+                alert(
+                    "EXAM TERMINATED!\n\n" +
+                    "Maximum warning limit exceeded."
+                );
+
+            }
+
+        }
+    )
+
+    .catch(
+        error => {
+
+            console.error(
+                "Warning error:",
+                error
+            );
+
+        }
+    );
+
+}
+
+
+
+/* ============================================================
+   START FACE DETECTION
+   ============================================================ */
+
+function startFaceDetection() {
+
+
+    /*
+        Prevent duplicate detection loops.
+    */
+
+    if (detectionRunning) {
+
+        return;
+
+    }
+
+
+    detectionRunning =
+        true;
+
+
+    /*
+        Check webcam every 300 milliseconds.
+    */
+
+    setInterval(
+        async function() {
+
+
+            if (!webcamStream) {
+
+                return;
+
+            }
+
+
+            if (
+                video.readyState < 2
+            ) {
+
+                return;
+
+            }
+
+
+            if (examTerminated) {
+
+                return;
+
+            }
+
+
+            try {
+
+
+                /*
+                    Send webcam frame to
+                    MediaPipe Face Mesh.
+                */
+
+                await faceMesh.send({
+
+                    image: video
+
+                });
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Face detection error:",
+                    error
+                );
+
+            }
+
+        },
+
+        300
+
+    );
+
+}
+
+
+
+/* ============================================================
+   TAB SWITCH DETECTION
+   ============================================================ */
+
+/*
+    visibilitychange is a browser API.
+
+    document.hidden becomes true when the
+    candidate changes to another tab/window.
+*/
+
+document.addEventListener(
+    "visibilitychange",
+    function() {
+
+
+        if (document.hidden) {
+
+
+            if (examTerminated) {
+
+                return;
+
+            }
+
+
+            /*
+                Log the tab switch.
+            */
+
+            logBrowserEvent(
+                "TAB_SWITCH",
+                "Candidate switched browser tab"
+            );
+
+
+            /*
+                Tell Flask that a tab switch occurred.
+            */
+
+            fetch(
+                "{{ url_for('tab_warning') }}",
+                {
+
+                    method: "POST",
+
+                    headers: {
+
+                        "Content-Type":
+                            "application/json"
+
+                    },
+
+                    body:
+                        JSON.stringify({})
+
+                }
+            )
+
+            .then(
+                response =>
+                    response.json()
+            )
+
+            .then(
+                data => {
+
+
+                    warningCount.textContent =
+                        data.warnings;
+
+
+                    if (
+                        data.terminated
+                    ) {
+
+                        examTerminated =
+                            true;
+
+
+                        terminatedBox.style.display =
+                            "block";
+
+
+                        submitBtn.disabled =
+                            true;
+
+
+                        alert(
+                            "EXAM TERMINATED!"
+                        );
+
+                    }
+
+                    else {
+
+                        alert(
+                            "⚠️ WARNING!\n\n" +
+                            "Tab switching is not allowed."
+                        );
+
+                    }
+
+                }
+            )
+
+            .catch(
+                error => {
+
+                    console.error(
+                        "Tab warning error:",
+                        error
+                    );
+
+                }
+            );
+
+        }
+
+        else {
+
+
+            /*
+                Candidate returned to exam.
+            */
+
+            logBrowserEvent(
+                "WINDOW_FOCUS",
+                "Candidate returned to exam"
+            );
+
+        }
+
+    }
+);
+
+
+
+/* ============================================================
+   WINDOW BLUR
+   ============================================================ */
+
+window.addEventListener(
+    "blur",
+    function() {
+
+        logBrowserEvent(
+            "WINDOW_BLUR",
+            "Exam window lost focus"
+        );
+
+    }
+);
+
+
+
+/* ============================================================
+   WINDOW FOCUS
+   ============================================================ */
+
+window.addEventListener(
+    "focus",
+    function() {
+
+        logBrowserEvent(
+            "WINDOW_FOCUS",
+            "Exam window regained focus"
+        );
+
+    }
+);
+
+
+
+/* ============================================================
+   MOUSE ACTIVITY
+   ============================================================ */
+
+document.addEventListener(
+    "mousemove",
+    function() {
+
+
+        const now =
+            Date.now();
+
+
+        /*
+            Log mouse activity once every 5 seconds.
+        */
+
+        if (
+            now - lastMouseLog >= 5000
+        ) {
+
+            lastMouseLog =
+                now;
+
+
+            logBrowserEvent(
+                "MOUSE_ACTIVITY",
+                "Candidate moved mouse"
+            );
+
+        }
+
+    }
+);
+
+
+
+/* ============================================================
+   KEYBOARD ACTIVITY
+   ============================================================ */
+
+document.addEventListener(
+    "keydown",
+    function() {
+
+
+        const now =
+            Date.now();
+
+
+        /*
+            Log keyboard activity once every
+            5 seconds instead of every key press.
+        */
+
+        if (
+            now - lastKeyboardLog >= 5000
+        ) {
+
+            lastKeyboardLog =
+                now;
+
+
+            logBrowserEvent(
+                "KEYBOARD_ACTIVITY",
+                "Candidate used keyboard"
+            );
+
+        }
+
+    }
+);
+
+
+
+/* ============================================================
+   EXAM STATUS CHECK
+   ============================================================ */
+
+function checkExamStatus() {
+
+
+    if (examTerminated) {
+
+        return;
+
+    }
+
+
+    /*
+        Ask Flask for the latest
+        examination warning status.
+    */
+
+    fetch(
+        "{{ url_for('exam_status_api') }}"
+    )
+
+    .then(
+        response =>
+            response.json()
+    )
+
+    .then(
+        data => {
+
+
+            /*
+                Update warning counter.
+            */
+
+            warningCount.textContent =
+                data.warnings;
+
+
+            /*
+                Check if backend terminated
+                the examination.
+            */
+
+            if (
+                data.terminated
+            ) {
+
+                examTerminated =
+                    true;
+
+
+                terminatedBox.style.display =
+                    "block";
+
+
+                submitBtn.disabled =
+                    true;
+
+
+                faceStatus.textContent =
+                    "🛑 EXAM TERMINATED";
+
+
+                faceStatus.className =
+                    "danger";
+
+            }
+
+        }
+    )
+
+    .catch(
+        error => {
+
+            console.error(
+                "Exam status error:",
+                error
+            );
+
+        }
+    );
+
+}
+
+
+/*
+    Check backend status every second.
+*/
+
+setInterval(
+    checkExamStatus,
+    1000
+);
+
+
+
+/* ============================================================
+   EXAM START EVENT
+   ============================================================ */
+
+logBrowserEvent(
+    "EXAM_START",
+    "Candidate started examination"
+);
+
+
+
+/* ============================================================
+   EXAM SUBMISSION
+   ============================================================ */
+
+document
+    .getElementById("examForm")
+    .addEventListener(
+        "submit",
+        function(event) {
+
+
+            /*
+                Don't allow submission if
+                examination was terminated.
+            */
+
+            if (examTerminated) {
+
+                event.preventDefault();
+
+
+                alert(
+                    "The examination has been terminated."
+                );
+
+
+                return;
+
+            }
+
+
+            /*
+                Prevent double submission.
+            */
+
+            if (submitting) {
+
+                event.preventDefault();
+
+                return;
+
+            }
+
+
+            submitting =
+                true;
+
+
+            /*
+                Disable submit button.
+            */
+
+            submitBtn.disabled =
+                true;
+
+
+            /*
+                Log submission.
+            */
+
+            logBrowserEvent(
+                "EXAM_SUBMIT",
+                "Candidate submitted examination"
+            );
+
+
+            /*
+                Stop webcam when exam is submitted.
+            */
+
+            if (webcamStream) {
+
+                webcamStream
+                    .getTracks()
+                    .forEach(
+                        track =>
+                            track.stop()
+                    );
+
+            }
+
+        }
+    );
+
+
+
+/* ============================================================
+   ONE QUESTION AT A TIME
+   ============================================================ */
+
+
+/*
+    Select all questions.
+
+    Initially CSS hides all questions.
+*/
+
+const questionSteps =
+    document.querySelectorAll(
+        ".question"
+    );
+
+
+/*
+    Previous button.
+*/
+
+const previousBtn =
+    document.getElementById(
+        "previousBtn"
+    );
+
+
+/*
+    Next button.
+*/
+
+const nextBtn =
+    document.getElementById(
+        "nextBtn"
+    );
+
+
+/*
+    Text showing:
+
+    Question 1 of 5
+*/
+
+const questionNumber =
+    document.getElementById(
+        "questionNumber"
+    );
+
+
+/*
+    Stores the currently visible question.
+
+    0 = Question 1
+    1 = Question 2
+    2 = Question 3
+*/
+
+let currentQuestionIndex = 0;
+
+
+
+/* ============================================================
+   SHOW QUESTION
+   ============================================================ */
+
+function showQuestion(index) {
+
+
+    /*
+        Make sure the index is valid.
+    */
+
+    if (
+        index < 0 ||
+        index >= questionSteps.length
+    ) {
+
+        return;
+
+    }
+
+
+    currentQuestionIndex =
+        index;
+
+
+    /*
+        Hide every question first.
+    */
+
+    questionSteps.forEach(
+        function(question, i) {
+
+
+            if (
+                i === currentQuestionIndex
+            ) {
+
+                /*
+                    Show current question.
+                */
+
+                question.classList.add(
+                    "active"
+                );
+
+            }
+
+            else {
+
+                /*
+                    Hide other questions.
+                */
+
+                question.classList.remove(
+                    "active"
+                );
+
+            }
+
+        }
+    );
+
+
+    /*
+        Update question number.
+    */
+
+    questionNumber.textContent =
+        "Question " +
+        (currentQuestionIndex + 1) +
+        " of " +
+        questionSteps.length;
+
+
+    /*
+        Disable Previous on Question 1.
+    */
+
+    previousBtn.disabled =
+        currentQuestionIndex === 0;
+
+
+    /*
+        Last question:
+        hide Next and show Submit.
+    */
+
+    if (
+        currentQuestionIndex ===
+        questionSteps.length - 1
+    ) {
+
+        nextBtn.style.display =
+            "none";
+
+
+        submitBtn.style.display =
+            "inline-block";
+
+    }
+
+    else {
+
+
+        /*
+            Normal question:
+            show Next and hide Submit.
+        */
+
+        nextBtn.style.display =
+            "inline-block";
+
+
+        submitBtn.style.display =
+            "none";
+
+    }
+
+}
+
+
+
+/* ============================================================
+   NEXT BUTTON
+   ============================================================ */
+
+nextBtn.addEventListener(
+    "click",
+    function() {
+
+
+        /*
+            Get the currently visible question.
+        */
+
+        const currentQuestion =
+            questionSteps[
+                currentQuestionIndex
+            ];
+
+
+        /*
+            Check whether candidate selected
+            an answer.
+        */
+
+        const selectedAnswer =
+            currentQuestion.querySelector(
+                'input[type="radio"]:checked'
+            );
+
+
+        /*
+            Don't allow the candidate to move
+            forward without selecting an answer.
+        */
+
+        if (!selectedAnswer) {
+
+            alert(
+                "Please select an answer before continuing."
+            );
+
+
+            return;
+
+        }
+
+
+        /*
+            Move to next question.
+        */
+
+        if (
+            currentQuestionIndex <
+            questionSteps.length - 1
+        ) {
+
+            currentQuestionIndex++;
+
+
+            showQuestion(
+                currentQuestionIndex
+            );
+
+        }
+
+    }
+);
+
+
+
+/* ============================================================
+   PREVIOUS BUTTON
+   ============================================================ */
+
+previousBtn.addEventListener(
+    "click",
+    function() {
+
+
+        /*
+            Move backwards if possible.
+        */
+
+        if (
+            currentQuestionIndex > 0
+        ) {
+
+            currentQuestionIndex--;
+
+
+            showQuestion(
+                currentQuestionIndex
+            );
+
+        }
+
+    }
+);
+
+
+
+/* ============================================================
+   START WITH QUESTION 1
+   ============================================================ */
+
+if (
+    questionSteps.length > 0
+) {
+
+    showQuestion(0);
+
+}
+
+</script>
+
+</body>
+
+</html>

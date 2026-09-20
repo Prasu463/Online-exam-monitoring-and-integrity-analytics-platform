@@ -1,0 +1,61 @@
+========================================
+       EXAMGUARD AI INTEGRITY REPORT
+========================================
+
+SESSION INFORMATION
+----------------------------------------
+Candidate: Sandra Mcdonald
+Session ID: SESSION-DFD6DCB2
+Integrity Score: 48.21
+Risk Level: HIGH
+Face Presence Ratio: 0.5
+Total Events: 14
+Total Penalty: 145.0
+
+OVERALL ASSESSMENT
+----------------------------------------
+The session has a HIGH risk level with an integrity score of 48.21.
+
+VERIFIED SUSPICIOUS ACTIVITIES
+----------------------------------------
+- FACE_ABSENT: 1 occurrence(s)
+- LOOKING_DOWN: 1 occurrence(s)
+- LOOKING_LEFT: 2 occurrence(s)
+- LOOKING_RIGHT: 1 occurrence(s)
+- LOOKING_UP: 1 occurrence(s)
+- MOBILE_DETECTED: 1 occurrence(s)
+- MULTIPLE_PERSONS: 3 occurrence(s)
+
+VERIFIED NORMAL MONITORING EVENTS
+----------------------------------------
+- FACE_PRESENT: 1 occurrence(s)
+- KEYBOARD_ACTIVITY: 1 occurrence(s)
+- MOUSE_ACTIVITY: 1 occurrence(s)
+- WINDOW_FOCUS: 1 occurrence(s)
+
+AI EXPLANATION
+----------------------------------------
+Candidate: Sandra Mcdonald
+Risk Level: HIGH
+Integrity Score: 48.21
+
+Candidate Sandra Mcdonald has been identified as a high-risk individual. She has been detected with the following suspicious activities:
+
+- FACE_ABSENT: 1 occurrence(s)
+- LOOKING_DOWN: 1 occurrence(s)
+- LOOKING_LEFT: 2 occurrence(s)
+- LOOKING_RIGHT: 1 occurrence(s)
+- LOOKING_UP: 1 occurrence(s)
+- MOBILE_DETECTED: 1 occurrence(s)
+
+Important rules:
+- Do not change the risk level.
+-
+
+RISK EXPLANATION
+----------------------------------------
+The session is classified as HIGH risk. The main suspicious activities are listed above and should be reviewed.
+
+RECOMMENDATION
+----------------------------------------
+The session should be reviewed carefully before accepting the examination result.

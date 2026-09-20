@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ExamGuard - Session Details</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <style>
+
+        body {
+            background: linear-gradient(
+                135deg,
+                #eef2ff,
+                #f8fafc
+            );
+
+            min-height: 100vh;
+        }
+
+        .header {
+            background: #212529;
+            color: white;
+            border-radius: 18px;
+        }
+
+        .card {
+            border: none;
+            border-radius: 16px;
+        }
+
+        .stat-card {
+            transition: 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .risk-badge {
+            padding: 10px 18px;
+            border-radius: 25px;
+            font-weight: 700;
+            display: inline-block;
+        }
+
+        .risk-normal {
+            background: #d1e7dd;
+            color: #0f5132;
+        }
+
+        .risk-suspicious {
+            background: #fff3cd;
+            color: #664d03;
+        }
+
+        .risk-high {
+            background: #f8d7da;
+            color: #842029;
+        }
+
+        .event-row {
+            border-left: 4px solid #0d6efd;
+        }
+
+        .no-events {
+            padding: 30px;
+            text-align: center;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="container-fluid py-4 px-4">
+
+
+    <!-- ================================================= -->
+    <!-- HEADER -->
+    <!-- ================================================= -->
+
+    <div class="header shadow p-4 mb-4">
+
+        <div class="row align-items-center">
+
+            <div class="col-md-8">
+
+                <h1 class="fw-bold">
+                    🛡️ ExamGuard
+                </h1>
+
+                <h4>
+                    Examination Session Details
+                </h4>
+
+                <p class="mb-0">
+                    Faculty / Proctor Review
+                </p>
+
+            </div>
+
+
+            <div class="col-md-4 text-md-end">
+
+                <a
+                    href="{{ url_for('faculty_dashboard') }}"
+                    class="btn btn-light"
+                >
+                    ← Back to Dashboard
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- CANDIDATE INFORMATION -->
+    <!-- ================================================= -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header bg-primary text-white">
+
+            <h4 class="mb-0">
+                👤 Candidate Information
+            </h4>
+
+        </div>
+
+
+        <div class="card-body">
+
+            <div class="row">
+
+
+                <div class="col-md-4 mb-3">
+
+                    <strong>
+                        Name
+                    </strong>
+
+                    <div class="fs-5">
+
+                        {{ result.candidate_name }}
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4 mb-3">
+
+                    <strong>
+                        Email
+                    </strong>
+
+                    <div>
+
+                        {{ result.candidate_email }}
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4 mb-3">
+
+                    <strong>
+                        Session
+                    </strong>
+
+                    <div>
+
+                        #{{ result.id }}
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- EXAM RESULT -->
+    <!-- ================================================= -->
+
+    <div class="row g-4 mb-4">
+
+
+        <!-- SCORE -->
+
+        <div class="col-md-3">
+
+            <div class="card stat-card shadow-sm h-100">
+
+                <div class="card-body text-center">
+
+                    <h6 class="text-muted">
+                        SCORE
+                    </h6>
+
+                    <div class="stat-number text-primary">
+
+                        {{ result.score }}
+
+                        /
+
+                        {{ result.total_questions }}
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- PERCENTAGE -->
+
+        <div class="col-md-3">
+
+            <div class="card stat-card shadow-sm h-100">
+
+                <div class="card-body text-center">
+
+                    <h6 class="text-muted">
+                        PERCENTAGE
+                    </h6>
+
+                    <div class="stat-number text-success">
+
+                        {{ result.percentage }}%
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- WARNINGS -->
+
+        <div class="col-md-3">
+
+            <div class="card stat-card shadow-sm h-100">
+
+                <div class="card-body text-center">
+
+                    <h6 class="text-muted">
+                        WARNINGS
+                    </h6>
+
+                    <div class="stat-number text-warning">
+
+                        {{ result.total_warnings }}
+
+                    </div>
+
+                    <small>
+                        Maximum allowed: 3
+                    </small>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- STATUS -->
+
+        <div class="col-md-3">
+
+            <div class="card stat-card shadow-sm h-100">
+
+                <div class="card-body text-center">
+
+                    <h6 class="text-muted">
+                        EXAM STATUS
+                    </h6>
+
+
+                    {% if result.exam_status == "TERMINATED" %}
+
+                        <span class="badge bg-danger fs-6">
+
+                            🔴 TERMINATED
+
+                        </span>
+
+                    {% else %}
+
+                        <span class="badge bg-success fs-6">
+
+                            🟢 COMPLETED
+
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- RISK ASSESSMENT -->
+    <!-- ================================================= -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header bg-dark text-white">
+
+            <h4 class="mb-0">
+                🧠 AI Risk Assessment
+            </h4>
+
+        </div>
+
+
+        <div class="card-body">
+
+
+            <div class="row align-items-center">
+
+
+                <!-- RISK -->
+
+                <div class="col-md-6 text-center mb-4">
+
+
+                    <h6 class="text-muted">
+                        RISK LEVEL
+                    </h6>
+
+
+                    {% if risk_level == "HIGH RISK" %}
+
+                        <span class="risk-badge risk-high fs-5">
+
+                            🔴 HIGH RISK
+
+                        </span>
+
+
+                    {% elif risk_level == "SUSPICIOUS" %}
+
+                        <span class="risk-badge risk-suspicious fs-5">
+
+                            🟡 SUSPICIOUS
+
+                        </span>
+
+
+                    {% else %}
+
+                        <span class="risk-badge risk-normal fs-5">
+
+                            🟢 NORMAL
+
+                        </span>
+
+                    {% endif %}
+
+                </div>
+
+
+                <!-- POINTS -->
+
+                <div class="col-md-6 text-center mb-4">
+
+                    <h6 class="text-muted">
+                        RISK POINTS
+                    </h6>
+
+                    <div class="display-5 fw-bold">
+
+                        {{ risk_points }}
+
+                    </div>
+
+                    <small class="text-muted">
+
+                        Suspicious activity score
+
+                    </small>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- SUSPICIOUS EVENTS -->
+
+            <hr>
+
+
+            <h5>
+                ⚠️ Suspicious Events
+            </h5>
+
+
+            {% if suspicious_events %}
+
+                <ul class="list-group">
+
+                    {% for event in suspicious_events %}
+
+                        <li class="list-group-item">
+
+                            ⚠️ {{ event }}
+
+                        </li>
+
+                    {% endfor %}
+
+                </ul>
+
+            {% else %}
+
+                <div class="alert alert-success mb-0">
+
+                    ✅ No suspicious events detected.
+
+                </div>
+
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- AI PROCTORING STATISTICS -->
+    <!-- ================================================= -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header bg-primary text-white">
+
+            <h4 class="mb-0">
+
+                🤖 AI Proctoring Report
+
+            </h4>
+
+        </div>
+
+
+        <div class="card-body">
+
+
+            <div class="row g-3">
+
+
+                <!-- LOOKING LEFT -->
+
+                <div class="col-md-3">
+
+                    <div class="border rounded p-3 text-center">
+
+                        <h6>
+                            👈 Looking Left
+                        </h6>
+
+                        <h3>
+
+                            {{ result.looking_left }}
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LOOKING RIGHT -->
+
+                <div class="col-md-3">
+
+                    <div class="border rounded p-3 text-center">
+
+                        <h6>
+                            👉 Looking Right
+                        </h6>
+
+                        <h3>
+
+                            {{ result.looking_right }}
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LOOKING UP -->
+
+                <div class="col-md-3">
+
+                    <div class="border rounded p-3 text-center">
+
+                        <h6>
+                            👆 Looking Up
+                        </h6>
+
+                        <h3>
+
+                            {{ result.looking_up }}
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <!-- LOOKING DOWN -->
+
+                <div class="col-md-3">
+
+                    <div class="border rounded p-3 text-center">
+
+                        <h6>
+                            👇 Looking Down
+                        </h6>
+
+                        <h3>
+
+                            {{ result.looking_down }}
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <!-- NO FACE -->
+
+                <div class="col-md-3">
+
+                    <div class="border rounded p-3 text-center">
+
+                        <h6>
+                            🚫 No Face
+                        </h6>
+
+                        <h3>
+
+                            {{ result.no_face }}
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MULTIPLE PERSON -->
+
+                <div class="col-md-3">
+
+                    <div class="border rounded p-3 text-center">
+
+                        <h6>
+                            👥 Multiple Persons
+                        </h6>
+
+                        <h3>
+
+                            {{ result.multiple_persons }}
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <!-- MOBILE -->
+
+                <div class="col-md-3">
+
+                    <div class="border rounded p-3 text-center">
+
+                        <h6>
+                            📱 Mobile Phone
+                        </h6>
+
+                        <h3>
+
+                            {{ result.mobile }}
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+                <!-- TAB SWITCH -->
+
+                <div class="col-md-3">
+
+                    <div class="border rounded p-3 text-center">
+
+                        <h6>
+                            🔄 Tab Switching
+                        </h6>
+
+                        <h3>
+
+                            {{ result.tab_switch }}
+
+                        </h3>
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- EVENT HISTORY -->
+    <!-- ================================================= -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header bg-dark text-white">
+
+            <h4 class="mb-0">
+
+                📋 Event History
+
+            </h4>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+
+            {% if logs %}
+
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover mb-0">
+
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th>
+                                    Session
+                                </th>
+
+                                <th>
+                                    Event
+                                </th>
+
+                                <th>
+                                    Time
+                                </th>
+
+                                <th>
+                                    Details
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+
+                        {% for log in logs %}
+
+
+                            <tr class="event-row">
+
+
+                                <td>
+
+                                    {{ log.session_id }}
+
+                                </td>
+
+
+                                <td>
+
+                                    <strong>
+
+                                        {{ log.event_type }}
+
+                                    </strong>
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ log.event_time }}
+
+                                </td>
+
+
+                                <td>
+
+                                    {{ log.event_value }}
+
+                                </td>
+
+
+                            </tr>
+
+
+                        {% endfor %}
+
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+            {% else %}
+
+
+                <div class="no-events">
+
+                    <div style="font-size: 45px;">
+                        📭
+                    </div>
+
+                    <h5>
+                        No Event History
+                    </h5>
+
+                    <p class="text-muted mb-0">
+
+                        No recorded events were found
+                        for this candidate.
+
+                    </p>
+
+                </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- FACE ABSENCE HISTORY -->
+    <!-- ================================================= -->
+
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header bg-warning">
+
+            <h4 class="mb-0">
+
+                🚫 Face Absence History
+
+            </h4>
+
+        </div>
+
+
+        <div class="card-body p-0">
+
+
+            {% if face_logs %}
+
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover mb-0">
+
+                        <thead class="table-light">
+
+                            <tr>
+
+                                <th>
+                                    Session
+                                </th>
+
+                                <th>
+                                    Event
+                                </th>
+
+                                <th>
+                                    Start Time
+                                </th>
+
+                                <th>
+                                    End Time
+                                </th>
+
+                                <th>
+                                    Duration
+                                </th>
+
+                            </tr>
+
+                        </thead>
+
+
+                        <tbody>
+
+
+                        {% for log in face_logs %}
+
+
+                            <tr>
+
+                                <td>
+
+                                    {{ log.session_id }}
+
+                                </td>
+
+                                <td>
+
+                                    {{ log.event_type }}
+
+                                </td>
+
+                                <td>
+
+                                    {{ log.start_time }}
+
+                                </td>
+
+                                <td>
+
+                                    {{ log.end_time }}
+
+                                </td>
+
+                                <td>
+
+                                    {{ log.duration_seconds }} seconds
+
+                                </td>
+
+                            </tr>
+
+
+                        {% endfor %}
+
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+
+            {% else %}
+
+
+                <div class="no-events">
+
+                    <div style="font-size: 40px;">
+                        ✅
+                    </div>
+
+                    <h5>
+                        No Face Absence Records
+                    </h5>
+
+                </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+    </div>
+
+
+
+    <!-- ================================================= -->
+    <!-- FOOTER -->
+    <!-- ================================================= -->
+
+    <div class="text-center text-muted py-4">
+
+        <p class="mb-0">
+
+            🛡️ ExamGuard AI Proctoring System
+
+        </p>
+
+        <small>
+
+            Faculty examination monitoring panel
+
+        </small>
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

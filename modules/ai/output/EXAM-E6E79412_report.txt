@@ -1,0 +1,54 @@
+========================================
+       EXAMGUARD AI INTEGRITY REPORT
+========================================
+
+SESSION INFORMATION
+----------------------------------------
+Candidate: Prasanna Puttaparthi
+Session ID: EXAM-E6E79412
+Integrity Score: 55.0
+Risk Level: MEDIUM
+Face Presence Ratio: 0.0
+Total Events: 10
+Total Penalty: 90.0
+
+OVERALL ASSESSMENT
+----------------------------------------
+The session has a MEDIUM risk level with an integrity score of 55.0.
+
+VERIFIED SUSPICIOUS ACTIVITIES
+----------------------------------------
+- TAB_SWITCH: 4 occurrence(s)
+- WINDOW_BLUR: 1 occurrence(s)
+
+VERIFIED NORMAL MONITORING EVENTS
+----------------------------------------
+- EXAM_START: 1 occurrence(s)
+- MOUSE_ACTIVITY: 2 occurrence(s)
+- WINDOW_FOCUS: 2 occurrence(s)
+
+AI EXPLANATION
+----------------------------------------
+Candidate: Prasanna Puttaparthi
+Risk Level: MEDIUM
+Integrity Score: 55.0
+
+Verified suspicious activity:
+- Tab Switch: 4 occurrences
+- Window Blur: 1 occurrence
+
+Important rules:
+- Do not change the risk level.
+- Do not call normal events suspicious.
+- Do not invent any events.
+- Do not mention events with zero occurrences.
+- Focus only on the suspicious activities.
+- Be concise and professional.
+
+RISK EXPLANATION
+----------------------------------------
+The session is classified as MEDIUM risk. The main suspicious activities are listed above and should be reviewed.
+
+RECOMMENDATION
+----------------------------------------
+The suspicious activities should be reviewed before making a final decision.

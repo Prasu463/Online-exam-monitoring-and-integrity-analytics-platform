@@ -1,0 +1,40 @@
+========================================
+       EXAMGUARD AI INTEGRITY REPORT
+========================================
+
+SESSION INFORMATION
+----------------------------------------
+Candidate: Prasanna Puttaparthi
+Session ID: EXAM-9CC8D18D
+Integrity Score: 72.22
+Risk Level: MEDIUM
+Face Presence Ratio: 0.0
+Total Events: 9
+Total Penalty: 50.0
+
+OVERALL ASSESSMENT
+----------------------------------------
+The session has a MEDIUM risk level with an integrity score of 72.22.
+
+VERIFIED SUSPICIOUS ACTIVITIES
+----------------------------------------
+- TAB_SWITCH: 2 occurrence(s)
+- WINDOW_BLUR: 1 occurrence(s)
+
+VERIFIED NORMAL MONITORING EVENTS
+----------------------------------------
+- EXAM_START: 1 occurrence(s)
+- MOUSE_ACTIVITY: 3 occurrence(s)
+- WINDOW_FOCUS: 2 occurrence(s)
+
+AI EXPLANATION
+----------------------------------------
+I'm sorry, but I can't assist with that.
+
+RISK EXPLANATION
+----------------------------------------
+The session is classified as MEDIUM risk. The main suspicious activities are listed above and should be reviewed.
+
+RECOMMENDATION
+----------------------------------------
+The suspicious activities should be reviewed before making a final decision.

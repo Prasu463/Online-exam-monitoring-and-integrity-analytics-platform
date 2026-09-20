@@ -1,0 +1,25 @@
+session_id,candidate_name,candidate_email,total_events,total_penalty,EXAM_START,EXAM_SUBMIT,FACE_ABSENT,FACE_PRESENT,KEYBOARD_ACTIVITY,LOOKING_DOWN,LOOKING_LEFT,LOOKING_RIGHT,LOOKING_UP,MOBILE_DETECTED,MOUSE_ACTIVITY,MULTIPLE_PERSONS,TAB_SWITCH,WINDOW_BLUR,WINDOW_FOCUS,MOBILE_PHONE,face_presence_ratio,penalty_per_event,integrity_score,risk_label,cluster
+EXAM-834F6175,Prasanna Puttaparthi,prasannaputtaparthi@gmail.com,10,55.0,1,2,0,0,0,0,0,0,0,0,3,0,2,0,2,0,0.0,5.5,72.5,MEDIUM,2
+EXAM-9CC8D18D,Prasanna Puttaparthi,prasannaputtaparthi1@gmail.com,9,50.0,1,0,0,0,0,0,0,0,0,0,3,0,2,1,2,0,0.0,5.56,72.22,MEDIUM,2
+EXAM-BF0F3D9A,Prasanna Puttaparthi,prasannaputtaparthi@gmail.com,5,45.0,1,0,0,0,0,0,0,0,0,0,1,0,2,0,1,0,0.0,9.0,55.0,MEDIUM,2
+EXAM-E6E79412,Prasanna Puttaparthi,prasannaputtaparthi@gmail.com,10,90.0,1,0,0,0,0,0,0,0,0,0,2,0,4,1,2,0,0.0,9.0,55.0,MEDIUM,1
+SESSION-00571931,Tyler Brown,soliseric@example.org,6,30.0,0,0,0,0,2,0,0,0,0,1,1,0,1,1,0,0,0.0,5.0,75.0,LOW,2
+SESSION-0A93402F,Anthony Crawford,lauren69@example.net,12,90.0,0,0,1,2,2,1,1,1,1,1,0,1,0,1,0,0,0.667,7.5,62.5,MEDIUM,0
+SESSION-1DE81743,Sarah Walsh,beckerjennifer@example.net,8,105.0,0,0,0,0,1,0,1,2,0,1,0,2,1,0,0,0,0.0,13.12,34.38,HIGH,1
+SESSION-20601DE4,William Scott,galvanandrew@example.org,8,70.0,0,0,1,0,0,0,1,1,0,2,0,0,1,1,1,0,0.0,8.75,56.25,MEDIUM,1
+SESSION-3274D67B,Carrie Jones,mary15@example.com,8,65.0,0,0,1,0,1,0,1,0,0,1,0,1,0,2,1,0,0.0,8.12,59.38,MEDIUM,2
+SESSION-3ECC8DAD,Ian Mayer,qvilla@example.com,8,105.0,0,0,0,0,1,1,1,2,0,0,0,1,2,0,0,0,0.0,13.12,34.38,HIGH,1
+SESSION-587EAACF,Randall Goodwin,jerrystrickland@example.org,9,95.0,0,0,0,0,0,1,0,0,2,0,1,1,2,0,2,0,0.0,10.56,47.22,HIGH,1
+SESSION-5D4CC700,Tyler Potter,moranholly@example.org,14,100.0,0,0,1,6,2,0,1,0,0,0,0,3,0,0,1,0,0.857,7.14,64.29,MEDIUM,0
+SESSION-603F866E,Mr. Martin Buckley,johnsonbrianna@example.com,11,95.0,0,0,2,0,1,2,1,1,2,0,0,0,0,1,1,0,0.0,8.64,56.82,MEDIUM,1
+SESSION-6B9A0856,Jacqueline Davis,timothyjimenez@example.org,7,80.0,0,0,1,0,1,0,2,0,0,0,1,1,1,0,0,0,0.0,11.43,42.86,HIGH,1
+SESSION-6E58DFB0,John Brown,drobbins@example.net,6,15.0,0,0,0,0,1,0,0,0,1,0,3,0,0,1,0,0,0.0,2.5,87.5,LOW,2
+SESSION-6F9F17CE,Rebekah Edwards,campbelldeanna@example.org,8,70.0,0,0,1,1,0,2,0,0,0,2,0,1,0,0,1,0,0.5,8.75,56.25,MEDIUM,1
+SESSION-7EA8BD49,Brandon Martin,briannahughes@example.net,6,70.0,0,0,0,1,0,1,0,1,0,1,0,1,1,0,0,0,1.0,11.67,41.67,HIGH,1
+SESSION-87E0F728,Ricky Gutierrez,robertflowers@example.com,12,105.0,0,0,0,1,1,0,2,0,2,2,0,2,0,1,1,0,1.0,8.75,56.25,MEDIUM,0
+SESSION-92ADCD98,Sean Acosta,meganvaughan@example.org,8,125.0,0,0,3,0,0,0,2,1,0,0,0,2,0,0,0,0,0.0,15.62,21.88,HIGH,1
+SESSION-96700330,Kevin Bass,juansnow@example.com,14,120.0,0,0,0,1,1,0,1,1,2,3,1,1,2,0,1,0,1.0,8.57,57.14,MEDIUM,0
+SESSION-A276C0D5,Scott Jones,albert12@example.com,11,85.0,0,0,1,1,1,2,0,0,1,0,2,0,2,0,1,0,0.5,7.73,61.36,MEDIUM,0
+SESSION-AC90F9C1,Joe Taylor,jenniferrichardson@example.org,11,110.0,0,0,0,1,0,3,2,1,0,1,1,1,1,0,0,0,1.0,10.0,50.0,MEDIUM,0
+SESSION-DFD6DCB2,Sandra Mcdonald,don51@example.net,14,145.0,0,0,1,1,1,1,2,1,1,1,1,3,0,0,1,0,0.5,10.36,48.21,HIGH,0
+SESSION-FD1222F0,Felicia Whitney,spowell@example.net,15,105.0,0,0,1,1,0,2,0,0,3,3,2,1,0,0,2,0,0.5,7.0,65.0,MEDIUM,0

@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>ExamGuard - Examination Result</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f7fb;
+            color: #1f2937;
+        }
+
+        /* =====================================================
+           HEADER
+        ===================================================== */
+
+        .header {
+            background: #111827;
+            color: white;
+            padding: 20px 40px;
+        }
+
+        .brand {
+            font-size: 25px;
+            font-weight: bold;
+        }
+
+        .brand span {
+            color: #60a5fa;
+        }
+
+        /* =====================================================
+           MAIN CONTAINER
+        ===================================================== */
+
+        .container {
+            max-width: 1000px;
+            margin: 35px auto;
+            padding: 0 20px;
+        }
+
+        /* =====================================================
+           TITLE
+        ===================================================== */
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .page-title h1 {
+            margin-bottom: 8px;
+        }
+
+        .page-title p {
+            color: #6b7280;
+        }
+
+        /* =====================================================
+           CARD
+        ===================================================== */
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 20px;
+
+            box-shadow:
+                0 5px 20px
+                rgba(0, 0, 0, 0.06);
+        }
+
+        .card h2 {
+            margin-top: 0;
+        }
+
+        /* =====================================================
+           RESULT
+        ===================================================== */
+
+        .candidate {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .candidate h2 {
+            margin-bottom: 5px;
+        }
+
+        .candidate p {
+            color: #6b7280;
+        }
+
+        /* =====================================================
+           SCORE GRID
+        ===================================================== */
+
+        .score-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 15px;
+        }
+
+        .score-box {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .score-label {
+            font-size: 13px;
+            color: #6b7280;
+            text-transform: uppercase;
+        }
+
+        .score-value {
+            font-size: 32px;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        /* =====================================================
+           PASS / FAIL
+        ===================================================== */
+
+        .status {
+            text-align: center;
+            margin-top: 25px;
+        }
+
+        .passed {
+            display: inline-block;
+
+            background: #dcfce7;
+            color: #166534;
+
+            padding: 10px 25px;
+
+            border-radius: 30px;
+
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .failed {
+            display: inline-block;
+
+            background: #fee2e2;
+            color: #991b1b;
+
+            padding: 10px 25px;
+
+            border-radius: 30px;
+
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .terminated {
+            display: inline-block;
+
+            background: #fee2e2;
+            color: #991b1b;
+
+            padding: 10px 25px;
+
+            border-radius: 30px;
+
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* =====================================================
+           PROCTORING
+        ===================================================== */
+
+        .warning-box {
+            background: #fff7ed;
+
+            border: 1px solid #fed7aa;
+
+            border-radius: 12px;
+
+            padding: 18px;
+
+            margin-bottom: 20px;
+        }
+
+        .warning-number {
+            font-size: 28px;
+            font-weight: bold;
+
+            color: #ea580c;
+        }
+
+        .warning-limit {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        /* =====================================================
+           VIOLATION GRID
+        ===================================================== */
+
+        .violation-grid {
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 12px;
+        }
+
+        .violation {
+            background: #f8fafc;
+
+            border-radius: 10px;
+
+            padding: 15px;
+
+            text-align: center;
+        }
+
+        .violation-title {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .violation-value {
+            font-size: 24px;
+            font-weight: bold;
+
+            margin-top: 5px;
+        }
+
+        /* =====================================================
+           RISK
+        ===================================================== */
+
+        .risk-card {
+            border-left: 5px solid #16a34a;
+        }
+
+        .risk-card.suspicious-border {
+            border-left-color: #d97706;
+        }
+
+        .risk-card.high-border {
+            border-left-color: #dc2626;
+        }
+
+        .risk-level {
+            font-size: 28px;
+            font-weight: bold;
+
+            margin-bottom: 20px;
+        }
+
+        .risk-normal {
+            color: #16a34a;
+        }
+
+        .risk-suspicious {
+            color: #d97706;
+        }
+
+        .risk-high {
+            color: #dc2626;
+        }
+
+        .risk-points {
+            font-size: 30px;
+            font-weight: bold;
+        }
+
+        .risk-description {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        /* =====================================================
+           SUSPICIOUS EVENTS
+        ===================================================== */
+
+        .events {
+            margin-top: 20px;
+        }
+
+        .event {
+            padding: 12px;
+
+            margin-bottom: 8px;
+
+            background: #fff7ed;
+
+            border-radius: 8px;
+
+            color: #9a3412;
+        }
+
+        .no-events {
+            padding: 14px;
+
+            background: #f0fdf4;
+
+            border-radius: 8px;
+
+            color: #166534;
+
+            font-weight: bold;
+        }
+
+        /* =====================================================
+           EXAM STATUS
+        ===================================================== */
+
+        .completed {
+            color: #166534;
+        }
+
+        .status-message {
+            background: #f8fafc;
+
+            padding: 15px;
+
+            border-radius: 8px;
+
+            margin-top: 12px;
+        }
+
+        /* =====================================================
+           CANDIDATE INFORMATION
+        ===================================================== */
+
+        .info-row {
+            display: flex;
+
+            justify-content: space-between;
+
+            padding: 13px 0;
+
+            border-bottom:
+                1px solid #e5e7eb;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            color: #6b7280;
+        }
+
+        .info-value {
+            font-weight: bold;
+        }
+
+        /* =====================================================
+           BUTTONS
+        ===================================================== */
+
+        .actions {
+            text-align: center;
+
+            margin: 25px 0;
+        }
+
+        .btn {
+            display: inline-block;
+
+            padding: 12px 20px;
+
+            background: #2563eb;
+
+            color: white;
+
+            text-decoration: none;
+
+            border-radius: 8px;
+
+            font-weight: bold;
+
+            margin: 5px;
+        }
+
+        .btn:hover {
+            background: #1d4ed8;
+        }
+
+        .print-btn {
+            background: #374151;
+        }
+
+        .print-btn:hover {
+            background: #1f2937;
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 800px) {
+
+            .score-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .violation-grid {
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+        @media (max-width: 500px) {
+
+            .violation-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 18px 20px;
+            }
+
+            .container {
+                padding: 0 12px;
+            }
+
+        }
+
+        /* =====================================================
+           PRINT
+        ===================================================== */
+
+        @media print {
+
+            body {
+                background: white;
+            }
+
+            .header {
+                background: white;
+                color: black;
+            }
+
+            .actions {
+                display: none;
+            }
+
+            .card {
+                box-shadow: none;
+                border: 1px solid #ddd;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<!-- =========================================================
+     HEADER
+========================================================= -->
+
+<header class="header">
+
+    <div class="brand">
+
+        🛡️ <span>ExamGuard</span>
+
+    </div>
+
+</header>
+
+
+<!-- =========================================================
+     MAIN
+========================================================= -->
+
+<main class="container">
+
+
+    <!-- =====================================================
+         TITLE
+    ====================================================== -->
+
+    <div class="page-title">
+
+        <h1>
+            📝 Online Examination Result
+        </h1>
+
+        <p>
+            Examination performance and AI proctoring report
+        </p>
+
+    </div>
+
+
+    <!-- =====================================================
+         CANDIDATE / SCORE
+    ====================================================== -->
+
+    <section class="card">
+
+
+        <div class="candidate">
+
+            <h2>
+                🎓 Exam Result
+            </h2>
+
+            <p>
+                Candidate
+            </p>
+
+            <h2>
+                {{ session.get("name", "Candidate") }}
+            </h2>
+
+        </div>
+
+
+        <div class="score-grid">
+
+
+            <!-- SCORE -->
+
+            <div class="score-box">
+
+                <div class="score-label">
+                    Your Score
+                </div>
+
+                <div class="score-value">
+                    {{ score }}
+                </div>
+
+                <div class="score-label">
+                    Correct Answers
+                </div>
+
+            </div>
+
+
+            <!-- TOTAL -->
+
+            <div class="score-box">
+
+                <div class="score-label">
+                    Total Questions
+                </div>
+
+                <div class="score-value">
+                    {{ total }}
+                </div>
+
+                <div class="score-label">
+                    Questions
+                </div>
+
+            </div>
+
+
+            <!-- PERCENTAGE -->
+
+            <div class="score-box">
+
+                <div class="score-label">
+                    Percentage
+                </div>
+
+                <div class="score-value">
+                    {{ percentage }}%
+                </div>
+
+                <div class="score-label">
+                    Overall Performance
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             PASS / FAIL
+        ================================================== -->
+
+        <div class="status">
+
+
+            {% if terminated %}
+
+                <span class="terminated">
+
+                    ❌ EXAM TERMINATED
+
+                </span>
+
+
+            {% elif result_status == "PASSED" %}
+
+                <span class="passed">
+
+                    ✅ PASSED
+
+                </span>
+
+
+            {% else %}
+
+                <span class="failed">
+
+                    ❌ FAILED
+
+                </span>
+
+            {% endif %}
+
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =====================================================
+         AI PROCTORING REPORT
+    ====================================================== -->
+
+    <section class="card">
+
+
+        <h2>
+            🤖 AI Proctoring Report
+        </h2>
+
+
+        <div class="warning-box">
+
+
+            <div>
+                TOTAL WARNINGS
+            </div>
+
+
+            <div class="warning-number">
+
+                {{ warnings }}
+
+            </div>
+
+
+            <div class="warning-limit">
+
+                Maximum allowed: 3
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =================================================
+             VIOLATIONS
+        ================================================== -->
+
+        <div class="violation-grid">
+
+
+            <div class="violation">
+
+                <div class="violation-title">
+                    👈 Looking Left
+                </div>
+
+                <div class="violation-value">
+                    {{ violations.get("left", 0) }}
+                </div>
+
+            </div>
+
+
+            <div class="violation">
+
+                <div class="violation-title">
+                    👉 Looking Right
+                </div>
+
+                <div class="violation-value">
+                    {{ violations.get("right", 0) }}
+                </div>
+
+            </div>
+
+
+            <div class="violation">
+
+                <div class="violation-title">
+                    👆 Looking Up
+                </div>
+
+                <div class="violation-value">
+                    {{ violations.get("up", 0) }}
+                </div>
+
+            </div>
+
+
+            <div class="violation">
+
+                <div class="violation-title">
+                    👇 Looking Down
+                </div>
+
+                <div class="violation-value">
+                    {{ violations.get("down", 0) }}
+                </div>
+
+            </div>
+
+
+            <div class="violation">
+
+                <div class="violation-title">
+                    🚫 No Face
+                </div>
+
+                <div class="violation-value">
+                    {{ violations.get("no_face", 0) }}
+                </div>
+
+            </div>
+
+
+            <div class="violation">
+
+                <div class="violation-title">
+                    📱 Mobile Phone
+                </div>
+
+                <div class="violation-value">
+                    {{ violations.get("mobile", 0) }}
+                </div>
+
+            </div>
+
+
+            <div class="violation">
+
+                <div class="violation-title">
+                    👥 Multiple Persons
+                </div>
+
+                <div class="violation-value">
+                    {{ violations.get("multiple_persons", 0) }}
+                </div>
+
+            </div>
+
+
+            <div class="violation">
+
+                <div class="violation-title">
+                    🔄 Tab Switching
+                </div>
+
+                <div class="violation-value">
+                    {{ violations.get("tab_switch", 0) }}
+                </div>
+
+            </div>
+
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =====================================================
+         RISK ASSESSMENT
+    ====================================================== -->
+
+    <section
+        class="card risk-card
+        {% if risk_level == 'SUSPICIOUS' %}
+            suspicious-border
+        {% elif risk_level == 'HIGH RISK' %}
+            high-border
+        {% endif %}"
+    >
+
+
+        <h2>
+            🧠 Suspicious Event Risk Assessment
+        </h2>
+
+
+        <!-- =================================================
+             RISK LEVEL
+        ================================================== -->
+
+        <h4>
+            RISK LEVEL
+        </h4>
+
+
+        <div class="risk-level">
+
+
+            {% if risk_level == "HIGH RISK" %}
+
+                <span class="risk-high">
+
+                    🔴 HIGH RISK
+
+                </span>
+
+
+            {% elif risk_level == "SUSPICIOUS" %}
+
+                <span class="risk-suspicious">
+
+                    🟡 SUSPICIOUS
+
+                </span>
+
+
+            {% else %}
+
+                <span class="risk-normal">
+
+                    🟢 NORMAL
+
+                </span>
+
+            {% endif %}
+
+
+        </div>
+
+
+        <!-- =================================================
+             RISK POINTS
+        ================================================== -->
+
+        <h4>
+            RISK POINTS
+        </h4>
+
+
+        <div class="risk-points">
+
+            {{ risk_points }}
+
+        </div>
+
+
+        <div class="risk-description">
+
+            Suspicious activity score
+
+        </div>
+
+
+        <!-- =================================================
+             TAB SWITCHES
+        ================================================== -->
+
+        <h4>
+            TAB SWITCHES
+        </h4>
+
+
+        <div class="risk-points">
+
+            {{ violations.get("tab_switch", 0) }}
+
+        </div>
+
+
+        <div class="risk-description">
+
+            Browser tab changes detected
+
+        </div>
+
+
+        <!-- =================================================
+             SUSPICIOUS EVENTS
+        ================================================== -->
+
+        <div class="events">
+
+
+            <h4>
+                ⚠️ Suspicious Events
+            </h4>
+
+
+            {% if suspicious_events %}
+
+
+                {% for event in suspicious_events %}
+
+                    <div class="event">
+
+                        ⚠️ {{ event }}
+
+                    </div>
+
+                {% endfor %}
+
+
+            {% else %}
+
+
+                <div class="no-events">
+
+                    ✅ No suspicious events detected.
+
+                </div>
+
+
+            {% endif %}
+
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =====================================================
+         EXAMINATION STATUS
+    ====================================================== -->
+
+    <section class="card">
+
+
+        <h2>
+            📊 Examination Status
+        </h2>
+
+
+        {% if terminated %}
+
+
+            <h3 style="color:#dc2626;">
+
+                ❌ Examination Terminated
+
+            </h3>
+
+
+        {% else %}
+
+
+            <h3 class="completed">
+
+                ✅ Examination Completed
+
+            </h3>
+
+
+            <p>
+                The examination was completed normally.
+            </p>
+
+
+        {% endif %}
+
+
+        {% if message %}
+
+            <div class="status-message">
+
+                {{ message }}
+
+            </div>
+
+        {% endif %}
+
+
+    </section>
+
+
+    <!-- =====================================================
+         CANDIDATE INFORMATION
+    ====================================================== -->
+
+    <section class="card">
+
+
+        <h2>
+            👤 Candidate Information
+        </h2>
+
+
+        <div class="info-row">
+
+            <span class="info-label">
+                Name
+            </span>
+
+            <span class="info-value">
+
+                {{ session.get("name", "Candidate") }}
+
+            </span>
+
+        </div>
+
+
+        <div class="info-row">
+
+            <span class="info-label">
+                Email
+            </span>
+
+            <span class="info-value">
+
+                {{ session.get("email", "") }}
+
+            </span>
+
+        </div>
+
+
+    </section>
+
+
+    <!-- =====================================================
+         ACTIONS
+    ====================================================== -->
+
+    <div class="actions">
+
+
+        <button
+            class="btn print-btn"
+            onclick="window.print()"
+        >
+
+            🖨️ Print Result
+
+        </button>
+
+
+        <a
+            href="{{ url_for('logout') }}"
+            class="btn"
+        >
+
+            Logout
+
+        </a>
+
+
+    </div>
+
+
+</main>
+
+
+</body>
+
+</html>

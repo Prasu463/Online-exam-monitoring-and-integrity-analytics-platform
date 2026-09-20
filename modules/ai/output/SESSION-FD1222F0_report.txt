@@ -1,0 +1,47 @@
+========================================
+       EXAMGUARD AI INTEGRITY REPORT
+========================================
+
+SESSION INFORMATION
+----------------------------------------
+Candidate: Felicia Whitney
+Session ID: SESSION-FD1222F0
+Integrity Score: 65.0
+Risk Level: MEDIUM
+Face Presence Ratio: 0.5
+Total Events: 15
+Total Penalty: 105.0
+
+OVERALL ASSESSMENT
+----------------------------------------
+The session has a MEDIUM risk level with an integrity score of 65.0.
+
+VERIFIED SUSPICIOUS ACTIVITIES
+----------------------------------------
+- FACE_ABSENT: 1 occurrence(s)
+- LOOKING_DOWN: 2 occurrence(s)
+- LOOKING_UP: 3 occurrence(s)
+- MOBILE_DETECTED: 3 occurrence(s)
+- MULTIPLE_PERSONS: 1 occurrence(s)
+
+VERIFIED NORMAL MONITORING EVENTS
+----------------------------------------
+- FACE_PRESENT: 1 occurrence(s)
+- MOUSE_ACTIVITY: 2 occurrence(s)
+- WINDOW_FOCUS: 2 occurrence(s)
+
+AI EXPLANATION
+----------------------------------------
+Candidate: Felicia Whitney
+Risk Level: MEDIUM
+Integrity Score: 65.0
+
+Candidate Felicia Whitney has reported suspicious activity. She has 1 occurrence of FACE_ABSENT, 2 occurrences of LOOKING_DOWN, 3 occurrences of LOOKING_UP, 3 occurrences of MULTIPLE_PERSONS, and 1 occurrence of MULTIPLE_PERSONS. She has not changed the risk level, called normal events suspicious, and did not invent any events. She focused only on the suspicious activities and provided a concise and professional response.
+
+RISK EXPLANATION
+----------------------------------------
+The session is classified as MEDIUM risk. The main suspicious activities are listed above and should be reviewed.
+
+RECOMMENDATION
+----------------------------------------
+The suspicious activities should be reviewed before making a final decision.

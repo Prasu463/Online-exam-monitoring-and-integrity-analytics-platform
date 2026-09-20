@@ -1,0 +1,4 @@
+cluster,sessions,average_score,average_penalty,average_face_ratio,average_events,cluster_risk
+0,8,58.09,107.5,0.753,12.88,MEDIUM
+1,10,44.67,90.5,0.15,8.3,HIGH
+2,6,70.27,43.33,0.0,7.33,MEDIUM

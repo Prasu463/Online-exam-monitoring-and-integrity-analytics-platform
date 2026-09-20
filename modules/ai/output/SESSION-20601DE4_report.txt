@@ -1,0 +1,53 @@
+========================================
+       EXAMGUARD AI INTEGRITY REPORT
+========================================
+
+SESSION INFORMATION
+----------------------------------------
+Candidate: William Scott
+Session ID: SESSION-20601DE4
+Integrity Score: 56.25
+Risk Level: MEDIUM
+Face Presence Ratio: 0.0
+Total Events: 8
+Total Penalty: 70.0
+
+OVERALL ASSESSMENT
+----------------------------------------
+The session has a MEDIUM risk level with an integrity score of 56.25.
+
+VERIFIED SUSPICIOUS ACTIVITIES
+----------------------------------------
+- FACE_ABSENT: 1 occurrence(s)
+- LOOKING_LEFT: 1 occurrence(s)
+- LOOKING_RIGHT: 1 occurrence(s)
+- MOBILE_DETECTED: 2 occurrence(s)
+- TAB_SWITCH: 1 occurrence(s)
+- WINDOW_BLUR: 1 occurrence(s)
+
+VERIFIED NORMAL MONITORING EVENTS
+----------------------------------------
+- WINDOW_FOCUS: 1 occurrence(s)
+
+AI EXPLANATION
+----------------------------------------
+Hello William Scott,
+
+Thank you for providing your information. I have verified the suspicious activity for you. Here are the findings:
+
+- **FACE_ABSENT**: 1 occurrence(s)
+- **LOOKING_LEFT**: 1 occurrence(s)
+- **LOOKING_RIGHT**: 1 occurrence(s)
+- **MOBILE_DETECTED**: 2 occurrence(s)
+- **TAB_SWITCH**: 1 occurrence(s)
+- **WINDOW_BLUR**: 1 occurrence(s)
+
+I have reviewed the verified findings and have provided a summary of the verified suspicious activity. Please let me know if you need any further assistance or if
+
+RISK EXPLANATION
+----------------------------------------
+The session is classified as MEDIUM risk. The main suspicious activities are listed above and should be reviewed.
+
+RECOMMENDATION
+----------------------------------------
+The suspicious activities should be reviewed before making a final decision.

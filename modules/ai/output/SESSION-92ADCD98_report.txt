@@ -1,0 +1,55 @@
+========================================
+       EXAMGUARD AI INTEGRITY REPORT
+========================================
+
+SESSION INFORMATION
+----------------------------------------
+Candidate: Sean Acosta
+Session ID: SESSION-92ADCD98
+Integrity Score: 21.88
+Risk Level: HIGH
+Face Presence Ratio: 0.0
+Total Events: 8
+Total Penalty: 125.0
+
+OVERALL ASSESSMENT
+----------------------------------------
+The session has a HIGH risk level with an integrity score of 21.88.
+
+VERIFIED SUSPICIOUS ACTIVITIES
+----------------------------------------
+- FACE_ABSENT: 3 occurrence(s)
+- LOOKING_LEFT: 2 occurrence(s)
+- LOOKING_RIGHT: 1 occurrence(s)
+- MULTIPLE_PERSONS: 2 occurrence(s)
+
+VERIFIED NORMAL MONITORING EVENTS
+----------------------------------------
+- No normal monitoring events recorded.
+
+AI EXPLANATION
+----------------------------------------
+Candidate: Sean Acosta
+Risk Level: HIGH
+Integrity Score: 21.88
+
+Candidate: Sean Acosta has reported a high risk level and a low integrity score. The verified suspicious activity includes:
+- FACE_ABSENT: 3 occurrences
+- LOOKING_LEFT: 2 occurrences
+- LOOKING_RIGHT: 1 occurrence
+- MULTIPLE_PERSONS: 2 occurrences
+
+Important rules:
+- Do not change the risk level.
+- Do not call normal events suspicious.
+- Do not invent any events.
+- Do not mention events with zero occurrences.
+- Focus only
+
+RISK EXPLANATION
+----------------------------------------
+The session is classified as HIGH risk. The main suspicious activities are listed above and should be reviewed.
+
+RECOMMENDATION
+----------------------------------------
+The session should be reviewed carefully before accepting the examination result.
